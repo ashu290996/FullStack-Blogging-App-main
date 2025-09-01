@@ -28,7 +28,7 @@ parameters {
         stage('Git checkout') {
             when { expression { params.RUN_GIT_CHECKOUT } } 
             steps {
-           git branch: 'main', credentialsId: 'github-login', url: 'https://github.com/ashu290996/FullStack-Blogging-App-main.git'
+           git branch: 'master', credentialsId: 'github-login', url: 'https://github.com/ashu290996/FullStack-Blogging-App-main.git'
             }
         }
 
@@ -48,7 +48,7 @@ parameters {
         stage('MVN package') {
             when { expression { params.RUN_MVN_PACKAGE } }
             steps {
-                sh "mvn package"
+                sh "mvn clean package -DskipTests=true"
             }
         }
          
@@ -56,7 +56,7 @@ parameters {
             when { expression { params.RUN_NEXUS_UPLOAD } }
             steps {
                 withMaven(globalMavenSettingsConfig: 'Global-maven-setting', jdk: 'jdk21', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
-                sh "mvn deploy -DskipTests=true"
+                sh "mvn deploy -DskipTests=true" }
             }
         }
         stage('Sonar Analysis') {
