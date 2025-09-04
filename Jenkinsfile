@@ -91,10 +91,11 @@ parameters {
         }
         stage('RUN TRIVY')
         {
+            /* groovylint-disable-next-line SpaceAfterClosingBrace */
             when { expression {params.RUN_TRIVY}}
             steps
             {
-                sh " trivy image --format table -o image.html ashu290996/bloggingapp:latest"
+                sh ' trivy image --format table -o image.html ashu290996/bloggingapp:latest'
             }
         }
        
