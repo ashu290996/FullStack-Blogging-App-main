@@ -16,13 +16,13 @@ parameters {
         booleanParam(name: 'RUN_MVN_TEST', defaultValue: true, description: 'Run MVN Test stage')
         booleanParam(name: 'RUN_MVN_PACKAGE', defaultValue: true, description: 'Run MVN package stage')
         booleanParam(name: 'RUN_NEXUS_UPLOAD', defaultValue: true, description: 'Run Nexus_upload stage')
-       // booleanParam(name: 'RUN_GIT_LEAKS', defaultValue: true, description: 'Run GitLeaks scan?')
+        // booleanParam(name: 'RUN_GIT_LEAKS', defaultValue: true, description: 'Run GitLeaks scan?')
         booleanParam(name: 'RUN_SONAR', defaultValue: true, description: 'Run SonarQube analysis?')
         booleanParam(name: 'RUN_OWASP', defaultValue: true, description: 'Run OWASP scan?')
         booleanParam(name: 'RUN_DOCKER_BUILD', defaultValue: true, description: 'Build and push Docker images?')
         booleanParam(name: 'RUN_TRIVY', defaultValue: true, description: 'Run Trivy scan?')
         booleanParam(name: 'RUN_DEPLOY_CONTAINER', defaultValue: true, description: 'Run Deploy to container?')
-    }
+}
     stages {
 
         stage('Git checkout') {
@@ -51,7 +51,7 @@ parameters {
                 sh "mvn clean package -DskipTests=true"
             }
         }
-         
+
         stage('Nexus Upload') {
             when { expression { params.RUN_NEXUS_UPLOAD } }
             steps {
@@ -77,6 +77,24 @@ parameters {
             steps {
                 dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DP-check'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Create docker image')
+        {
+            /* groovylint-disable-next-line SpaceAfterClosingBrace */
+            when { expression {params.RUN_DOCKER_BUILD}}
+            steps {
+
+                sh 'docker build -t ashu290996/bloggingapp:latest .'
+                sh 'dcoker push ashu290996/bloggingapp:latest'
+            }
+        }
+        stage('RUN TRIVY')
+        {
+            when { expression {params.RUN_TRIVY}}
+            steps
+            {
+                sh " trivy image --format table -o image.html ashu290996/bloggingapp:latest"
             }
         }
        
