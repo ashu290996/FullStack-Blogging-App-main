@@ -65,6 +65,7 @@ parameters {
                 withSonarQubeEnv('sonar-scanner') {
                     sh '''
                         $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.java.binaries=. \
                         -Dsonar.projectName=FullStack-Blogging-App \
                         -Dsonar.projectKey=FullStack-Blogging-App
                     '''
