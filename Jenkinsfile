@@ -84,9 +84,9 @@ parameters {
             /* groovylint-disable-next-line SpaceAfterClosingBrace */
             when { expression {params.RUN_DOCKER_BUILD}}
             steps {
-
+            withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                 sh 'docker build -t ashu290996/bloggingapp:latest .'
-                sh 'dcoker push ashu290996/bloggingapp:latest'
+                sh 'docker push ashu290996/bloggingapp:latest' }
             }
         }
         stage('RUN TRIVY')
@@ -98,6 +98,31 @@ parameters {
                 sh ' trivy image --format table -o image.html ashu290996/bloggingapp:latest'
             }
         }
-       
+        stage('Deploy to container')
+        {
+            /* groovylint-disable-next-line SpaceAfterClosingBrace */
+            when { expression {params.RUN_DEPLOY_CONTAINER}}
+            steps
+            {
+                withKubeConfig(caCertificate: '', clusterName: 'blogging', contextName: '', credentialsId: 'k8-prod-token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: 'https://blogging-dns-shmltoxg.hcp.eastus.azmk8s.io:443') {
+               sh "kubectl apply -f deployment-service.yml -n prod" 
+  //              sh "kubectl set image deployment bloggingapp-deployment bloggingapp=ashu290996/bloggingapp:latest -n taskmaster-ssvc"
+            }
+            }
+        }
+
+        stage('Deploy Monitoring') {
+            steps {
+                 withKubeConfig(caCertificate: '', clusterName: 'blogging', contextName: '', credentialsId: 'k8-prod-token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: 'https://blogging-dns-shmltoxg.hcp.eastus.azmk8s.io:443') {
+               sh "helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
+               sh "helm repo update"
+               sh "helm upgrade --install monitoring prometheus-community/kube-prometheus-stack -f Monitoring\values.yaml -n monitoring --create-namespace"
+               sh "kubectl patch svc monitoring-kube-prometheus-prometheus -n monitoring -p '{"spec": {"type": "LoadBalancer"}}'"
+               sh "kubectl patch svc monitoring-kube-state-metrics -n monitoring -p '{"spec": {"type": "LoadBalancer"}}'"
+               sh "kubectl patch svc monitoring-prometheus-node-exporter -n monitoring -p '{"spec": {"type": "LoadBalancer"}}'"
+            }
+        }
+
+        }
     }
 }
