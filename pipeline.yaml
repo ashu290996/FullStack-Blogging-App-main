@@ -214,7 +214,7 @@ stages:
                 kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
                 namespace: 'blog'
                 command: 'rollout'
-                arguments: ' status deployment/bloggingapp --timeout=300s'
+                arguments: ' status deployment/bloggingapp-deployment --timeout=300s'
 
             
 
