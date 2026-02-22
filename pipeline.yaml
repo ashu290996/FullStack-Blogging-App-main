@@ -174,10 +174,14 @@ stages:
               tags: |
                 $(imageTag)
                 latest
+          
 
-          - script: |
-                   trivy image --format table -o image.html $(imageNAme1):$(imageTag)
-                   cat image.html
+          - task: CmdLine@2
+            continueOnError: true
+            inputs:
+             script: |
+              trivy image --format table -o image.html $(imageNAme1):latest
+              cat image.html
                   
     - stage: Deployonk8
       displayName: 'Deployonk8'
