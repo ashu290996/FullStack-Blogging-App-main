@@ -61,6 +61,7 @@ stages:
                 artifact: 'twitter-app-0.0.3.jar'
                 publishLocation: 'pipeline'
              - task: Maven@4
+               continueOnError: true
                displayName: 'Maven Deploy'
                inputs:
                   mavenPomFile: 'pom.xml'
