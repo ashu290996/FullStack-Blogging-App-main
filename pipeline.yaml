@@ -68,6 +68,7 @@ stages:
           steps:
 
           - task: SonarQubePrepare@8
+            displayName: 'SonarQubePrepare'
             continueOnError: true
             inputs:
               SonarQube: '$(sonarQubeServiceConnection)'
@@ -80,6 +81,14 @@ stages:
                 sonar.java.binaries=.
               #  sonar.projectKey=$(sonarProjectKey)
               #  sonar.projectName=$(sonarProjectKey)
+
+          - task: Maven@4
+            displayName: 'Run SonarQube Analysis'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'verify sonar:sonar'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
 
           - task: SonarQubePublish@8
             continueOnError: true
@@ -171,15 +180,40 @@ stages:
     - stage: Deployonk8
       displayName: 'Deployonk8'
       jobs:
-        - job: CreateNameSpace
-          displayName: 'Create blogging namespace'
+        - job: Deployonk8
+          displayName: 'Deploying into k8'
           steps:
 
             - task: Kubernetes@1
+              displayName: 'Creating blog namepsace'
               inputs:
                 connectionType: 'Kubernetes Service Connection'
                 kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
                 command: 'create'
                 arguments: 'ns blog'
+           
+            - task: Kubernetes@1
+              displayName: 'Apply deployment-service'
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
+                namespace: 'blog'
+                command: 'apply'
+                arguments: '-f deployment-service.yml'
+ 
+            - task: Kubernetes@1
+              displayName: 'Wait for rollout to complete'
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
+                namespace: 'blog'
+                command: 'rollout'
+                arguments: ' status deployment/bloggingapp --timeout=300s'
+
+            
+
+            
+
+
 
 
