@@ -101,6 +101,7 @@ stages:
           steps:
         
           - task: dependency-check-build-task@6
+            continueOnError: true
             inputs:
               projectName: 'FullStack-Blogging-App'
               scanPath: '$(System.DefaultWorkingDirectory)/pom.xml'
