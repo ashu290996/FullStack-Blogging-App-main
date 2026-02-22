@@ -117,6 +117,7 @@ stages:
           steps:
 
           - task: DownloadPipelineArtifact@2
+            continueOnError: true
             inputs:
               buildType: 'current'
               artifactName: 'twitter-app-0.0.3.jar'
@@ -129,10 +130,10 @@ stages:
               trivy fs $(Pipeline.Workspace)/target/twitter-app-0.0.3.jar \
                 --severity $(trivySeverity) \
                 --format table \
-                --output $(Pipeline.Workspace)/trivy-jar-report.txt
+                --output $(Pipeline.Workspace)/target/trivy-jar-report.txt
 
               # Display results
-              cat $(Pipeline.Workspace)/trivy-jar-report.txt
+              cat $(Pipeline.Workspace)/target/trivy-jar-report.txt
 
     - stage: DockerImage
       displayName: 'DockerImage'
@@ -145,5 +146,8 @@ stages:
               containerRegistry: 'ashudevops'
               repository: '$(imageName1)'
               command: 'buildAndPush'
-              Dockerfile: '**/'
+              Dockerfile: '**/Dockerfile'
+              tags: |
+                $(imageTag)
+                latest
 
