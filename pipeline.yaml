@@ -127,10 +127,10 @@ stages:
               echo "=== Scanning JAR files for vulnerabilities ==="
               
               # Scan JAR files - Table format
-              trivy fs $(System.ArtifactsDirectory)/app-artifact \
+              trivy fs $(Pipeline.Workspace)/twitter-app-0.0.3.jar \
                 --severity $(trivySeverity) \
                 --format table \
-                --output $(Build.ArtifactStagingDirectory)/trivy-jar-report.txt
+                --output $(Pipeline.Workspace)/trivy-jar-report.txt
 
               # Display results
-                cat $(Build.ArtifactStagingDirectory)/trivy-jar-report.txt
+              cat $(Pipeline.Workspace)/trivy-jar-report.txt
