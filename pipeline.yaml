@@ -123,7 +123,11 @@ stages:
               artifactName: 'twitter-app-0.0.3.jar'
               targetPath: '$(Pipeline.Workspace)'
 
-          - script: |
+          - task: CmdLine@2
+            continueOnError: true
+            displayName: 'Scanning JAR files for vulnerabilities'
+            inputs:
+             script: |
               echo "=== Scanning JAR files for vulnerabilities ==="
               
               # Scan JAR files - Table format
@@ -159,4 +163,23 @@ stages:
               tags: |
                 $(imageTag)
                 latest
+
+          - script: |
+                   trivy image --format table -o image.html $(imageNAme1):$(imageTag)
+                   cat image.html
+                  
+    - stage: Deployonk8
+      displayName: 'Deployonk8'
+      jobs:
+        - job: CreateNameSpace
+          displayName: 'Create blogging namespace'
+          steps:
+
+            - task: Kubernetes@1
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
+                command: 'create'
+                arguments: 'ns blog'
+
 
