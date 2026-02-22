@@ -8,7 +8,7 @@ variables:
   imageName1: 'ashu290996/wonderlustfrontend'
   imageName2: 'ashu290996/wonderlustbackened'
   imageTag: '$(Build.BuildId)'
-  
+  mavenCacheFolder: $(Pipeline.Workspace)/.m2/repository
   # SonarQube
   sonarQubeServiceConnection: 'sonarQube'
   sonarProjectKey: 'wonderlust'
