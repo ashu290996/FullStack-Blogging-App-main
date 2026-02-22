@@ -49,7 +49,7 @@ stages:
 
              - task: Maven@4
                inputs:
-                azureSubscription: 'Pay-As-You-Go(12d08a43-87ab-49fc-b06f-d1d31622044a)'
+#                azureSubscription: 'Pay-As-You-Go(12d08a43-87ab-49fc-b06f-d1d31622044a)'
                 mavenPomFile: 'pom.xml'
                 goals: 'compile'
                 publishJUnitResults: true
