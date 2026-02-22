@@ -55,4 +55,10 @@ stages:
                   options: '-Dmaven.repo.local=$(mavenCacheFolder) -DskipTests'
                   javaHomeOption: 'JDKVersion'
 
+             - task: PublishPipelineArtifact@1
+               inputs:
+                targetPath: '$(Pipeline.Workspace)'
+                artifact: 'twitter-app-0.0.3.jar'
+                publishLocation: 'pipeline'
+
              
