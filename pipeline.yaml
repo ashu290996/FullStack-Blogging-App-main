@@ -134,6 +134,7 @@ stages:
 
               # Display results
               cat $(Pipeline.Workspace)/target/trivy-jar-report.txt
+              
 
     - stage: DockerImage
       displayName: 'DockerImage'
