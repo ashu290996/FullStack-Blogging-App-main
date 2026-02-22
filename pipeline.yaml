@@ -108,3 +108,29 @@ stages:
               format: 'HTML'
               uploadReports: true
               failOnCVSS: '7'
+          
+
+    - stage: TrivyScanJar
+      displayName: 'TrivyScanJar' 
+      jobs:
+        - job: TrivyScanJar 
+          displayName: 'Scanning Jar file for vulnerability'
+          steps:
+
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'twitter-app-0.0.3.jar'
+              targetPath: '$(Pipeline.Workspace)'
+
+          - script: |
+              echo "=== Scanning JAR files for vulnerabilities ==="
+              
+              # Scan JAR files - Table format
+              trivy fs $(System.ArtifactsDirectory)/app-artifact \
+                --severity $(trivySeverity) \
+                --format table \
+                --output $(Build.ArtifactStagingDirectory)/trivy-jar-report.txt
+
+              # Display results
+                cat $(Build.ArtifactStagingDirectory)/trivy-jar-report.txt
