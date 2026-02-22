@@ -77,7 +77,8 @@ stages:
               cliProjectKey: 'FullStack-Blogging-App-main'
               cliProjectName: 'FullStack-Blogging-App-main'
               cliSources: '$(System.DefaultWorkingDirectory)'
-              # extraProperties: 
+              extraProperties: 
+                sonar.java.binaries=.
               #  sonar.projectKey=$(sonarProjectKey)
               #  sonar.projectName=$(sonarProjectKey)
 
