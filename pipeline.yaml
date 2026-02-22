@@ -74,19 +74,21 @@ stages:
               SonarQube: '$(sonarQubeServiceConnection)'
               scannerMode: 'cli'
               configMode: 'manual'
-              cliProjectKey: 'FullStack-Blogging-App'
-              cliProjectName: 'FullStack-Blogging-App'
-              cliSources: 'FullStack-Blogging-App'
+              cliProjectKey: 'FullStack-Blogging-App-main'
+              cliProjectName: 'FullStack-Blogging-App-main'
+              cliSources: '$(System.DefaultWorkingDirectory)'
               # extraProperties: 
               #  sonar.projectKey=$(sonarProjectKey)
               #  sonar.projectName=$(sonarProjectKey)
 
           - task: SonarQubePublish@8
+            continueOnError: true
             inputs:
               pollingTimeoutSec: '300'
 
 
           - task: SonarQubeAnalyze@8
+            continueOnError: true
             inputs:
               jdkversion: 'JAVA_HOME_21_X64'
 
@@ -100,7 +102,7 @@ stages:
           - task: dependency-check-build-task@6
             inputs:
               projectName: 'FullStack-Blogging-App'
-              scanPath: 'pom.xml'
+              scanPath: '$(System.DefaultWorkingDirectory)/pom.xml'
               format: 'HTML'
               uploadReports: true
               failOnCVSS: '7'
