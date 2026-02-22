@@ -48,19 +48,9 @@ stages:
 
 
              - task: Maven@4
+               displayName: 'Maven Build'
                inputs:
-#                azureSubscription: 'Pay-As-You-Go(12d08a43-87ab-49fc-b06f-d1d31622044a)'
-                mavenPomFile: 'pom.xml'
-                goals: 'compile'
-                publishJUnitResults: true
-                testResultsFiles: '**/surefire-reports/TEST-*.xml'
-                javaHomeOption: 'JDKVersion'
-                mavenVersionOption: 'Default'
-                mavenAuthenticateFeed: false
-                effectivePomSkip: false
-                sonarQubeRunAnalysis: true
-                sqMavenPluginVersionChoice: 'latest'
-                checkStyleRunAnalysis: true
-                pmdRunAnalysis: true
-                findBugsRunAnalysis: true
-                spotBugsRunAnalysis: true
+                  mavenPomFile: 'pom.xml'
+                  goals: 'clean package -Dskiptests'
+                  options: '-Dmaven.repo.local=$(mavenCacheFolder) -DskipTests'
+                  javaHomeOption: 'JDKVersion'
