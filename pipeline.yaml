@@ -54,11 +54,20 @@ stages:
                   options: '-Dmaven.repo.local=$(mavenCacheFolder) -DskipTests'
                   javaHomeOption: 'JDKVersion'
 
+
              - task: PublishPipelineArtifact@1
                inputs:
                 targetPath: '$(Pipeline.Workspace)'
                 artifact: 'twitter-app-0.0.3.jar'
                 publishLocation: 'pipeline'
+             - task: Maven@4
+               displayName: 'Maven Deploy'
+               inputs:
+                  mavenPomFile: 'pom.xml'
+                  goals: 'clean deploy -Dskiptests'
+                  options: '-Dmaven.repo.local=$(mavenCacheFolder) -DskipTests'
+                  javaHomeOption: 'JDKVersion'
+
  
     - stage: SonarAnalysis
       displayName: 'SonarAnalysis'
@@ -81,14 +90,6 @@ stages:
                 sonar.java.binaries=.
               #  sonar.projectKey=$(sonarProjectKey)
               #  sonar.projectName=$(sonarProjectKey)
-
-          - task: Maven@4
-            displayName: 'Run SonarQube Analysis'
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: 'verify sonar:sonar'
-              options: '-DskipTests'
-              javaHomeOption: 'JDKVersion'
 
           - task: SonarQubePublish@8
             continueOnError: true
