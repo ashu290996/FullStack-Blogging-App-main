@@ -28,7 +28,7 @@ variables:
 pool:
  name: default
 stages:
-    - stage: Buildcode
+    - stage: Package
       displayName: 'Build code'
       jobs:
           - job: mvnbuildcompile
@@ -54,3 +54,5 @@ stages:
                   goals: 'clean package -Dskiptests'
                   options: '-Dmaven.repo.local=$(mavenCacheFolder) -DskipTests'
                   javaHomeOption: 'JDKVersion'
+
+             
