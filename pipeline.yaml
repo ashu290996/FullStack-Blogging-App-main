@@ -142,13 +142,13 @@ stages:
               echo "=== Scanning JAR files for vulnerabilities ==="
               
               # Scan JAR files - Table format
-              trivy fs $(Pipeline.Workspace)/target/twitter-app-0.0.3.jar \
-                --severity $(trivySeverity) \
-                --format table \
-                --output $(Pipeline.Workspace)/target/trivy-jar-report.txt
+              trivy fs /home/azureuser/myagent/_work/1/s/target/twitter-app-0.0.3.jar \
+              --severity HIGH,CRITICAL \
+              --format table \
+              --output /home/azureuser/myagent/_work/1/s/target/trivy-jar-report.txt
 
               # Display results
-              cat $(Pipeline.Workspace)/target/trivy-jar-report.txt
+              cat /home/azureuser/myagent/_work/1/s/target/trivy-jar-report.txt
               
 
     - stage: DockerImage
