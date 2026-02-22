@@ -5,13 +5,13 @@ trigger:
 variables:
 # Docker Registry
   dockerRegistry: 'ashudevops'
-  imageName1: 'ashu290996/wonderlustfrontend'
-  imageName2: 'ashu290996/wonderlustbackened'
+  imageName1: 'ashu290996/FullStack-Blogging-App'
+
   imageTag: '$(Build.BuildId)'
   mavenCacheFolder: $(Pipeline.Workspace)/.m2/repository
   # SonarQube
   sonarQubeServiceConnection: 'sonarQube'
-  sonarProjectKey: 'wonderlust'
+  sonarProjectKey: 'FullStack-Blogging-App'
   
   # Kubernetes
   kubernetesServiceConnection: 'k8s-prod-connection'
@@ -76,6 +76,9 @@ stages:
               cliProjectKey: 'FullStack-Blogging-App'
               cliProjectName: 'FullStack-Blogging-App'
               cliSources: 'FullStack-Blogging-App'
+              extraProperties: 
+               sonar.projectKey=$(sonarProjectKey)
+               sonar.projectName=$(sonarProjectKey)
 
           - task: SonarQubePublish@8
             inputs:
@@ -96,7 +99,7 @@ stages:
           - task: dependency-check-build-task@6
             inputs:
               projectName: 'FullStack-Blogging-App'
-              scanPath: 'FullStack-Blogging-App'
+              scanPath: 'pom.xml'
               format: 'HTML'
               uploadReports: true
               failOnCVSS: '7'
