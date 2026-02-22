@@ -191,6 +191,7 @@ stages:
           steps:
 
             - task: Kubernetes@1
+              continueOnError: true
               displayName: 'Creating blog namepsace'
               inputs:
                 connectionType: 'Kubernetes Service Connection'
@@ -208,6 +209,7 @@ stages:
                 arguments: '-f deployment-service.yml'
  
             - task: Kubernetes@1
+              continueOnError: true
               displayName: 'Wait for rollout to complete'
               inputs:
                 connectionType: 'Kubernetes Service Connection'
