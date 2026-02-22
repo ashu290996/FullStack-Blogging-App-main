@@ -25,10 +25,42 @@ variables:
   trivySeverity: 'HIGH,CRITICAL'
   owaspFailOnCVSS: 7
 
+pool:
+ name: default
 stages:
     - stage: Buildcode
       displayName: 'Build code'
       jobs:
           - job: mvnbuildcompile
             displayName: 'mvnbuildcompile'
-            
+            steps:
+             - task: Cache@2
+               displayName: 'Cache Maven Dependencies'
+               inputs:
+                  key: 'maven | "$(Agent.OS)" | pom.xml'
+                  restoreKeys: |
+                    maven | "$(Agent.OS)"
+                  path: $(mavenCacheFolder)
+          
+             - script: |
+                  mkdir -p $(mavenCacheFolder)
+               displayName: Ensure Maven folder exists
+
+
+             - task: Maven@4
+               inputs:
+                azureSubscription: 'Pay-As-You-Go(12d08a43-87ab-49fc-b06f-d1d31622044a)'
+                mavenPomFile: 'pom.xml'
+                goals: 'compile'
+                publishJUnitResults: true
+                testResultsFiles: '**/surefire-reports/TEST-*.xml'
+                javaHomeOption: 'JDKVersion'
+                mavenVersionOption: 'Default'
+                mavenAuthenticateFeed: false
+                effectivePomSkip: false
+                sonarQubeRunAnalysis: true
+                sqMavenPluginVersionChoice: 'latest'
+                checkStyleRunAnalysis: true
+                pmdRunAnalysis: true
+                findBugsRunAnalysis: true
+                spotBugsRunAnalysis: true
