@@ -69,16 +69,17 @@ stages:
           steps:
 
           - task: SonarQubePrepare@8
+            continueOnError: true
             inputs:
-              SonarQube: 'sonarqube'
+              SonarQube: '$(sonarQubeServiceConnection)'
               scannerMode: 'cli'
-              configMode: 'file'
+              configMode: 'manual'
               cliProjectKey: 'FullStack-Blogging-App'
               cliProjectName: 'FullStack-Blogging-App'
               cliSources: 'FullStack-Blogging-App'
-              extraProperties: 
-               sonar.projectKey=$(sonarProjectKey)
-               sonar.projectName=$(sonarProjectKey)
+              # extraProperties: 
+              #  sonar.projectKey=$(sonarProjectKey)
+              #  sonar.projectName=$(sonarProjectKey)
 
           - task: SonarQubePublish@8
             inputs:
