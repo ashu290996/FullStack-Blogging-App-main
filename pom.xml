@@ -100,14 +100,16 @@
 	</build>
 	
 	<distributionManagement>
-        <repository>
-            <id>maven-releases</id>
-            <url>http://172.177.234.162:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven-snapshots</id>
-            <url>http://172.177.234.162:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
+       <repository>
+		  <id>ashu29996</id>
+		  <url>https://pkgs.dev.azure.com/ashu29996/_packaging/ashu29996/maven/v1</url>
+		  <releases>
+		    <enabled>true</enabled>
+		  </releases>
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+		</repository>
     </distributionManagement>
 
 </project>
