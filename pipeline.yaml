@@ -5,9 +5,8 @@ trigger:
 variables:
 # Docker Registry
   dockerRegistry: 'ashudevops'
-  imageName1: 'ashu290996/FullStack-Blogging-App'
-
   imageTag: '$(Build.BuildId)'
+  imageNAme1: 'ashu290996/FullStack-Blogging-App'
   mavenCacheFolder: $(Pipeline.Workspace)/.m2/repository
   # SonarQube
   sonarQubeServiceConnection: 'sonarQube'
@@ -134,3 +133,17 @@ stages:
 
               # Display results
               cat $(Pipeline.Workspace)/trivy-jar-report.txt
+
+    - stage: DockerImage
+      displayName: 'DockerImage'
+      jobs:
+        - job: BuildPushImage
+          displayName: 'Build and Push Docker Image'
+          steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'ashudevops'
+              repository: '$(imageName1)'
+              command: 'buildAndPush'
+              Dockerfile: '**/'
+
