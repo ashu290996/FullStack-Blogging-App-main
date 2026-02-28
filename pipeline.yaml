@@ -218,6 +218,21 @@ stages:
                 command: 'rollout'
                 arguments: ' status deployment/bloggingapp-deployment --timeout=300s'
 
+    - stage:
+      displayName: 'Installing monitoring'
+      jobs:
+        - job: 
+          steps:
+          
+           - task: CmdLine@2
+             displayName: 'Installing helm repo'
+             inputs:
+              script: | 
+               helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+               helm repo update
+               helm upgrade --install monitoring   prometheus-community/kube-prometheus-stack   -f ./values.yaml   -n monitoring   --create-namespace
+
+
             
 
             
