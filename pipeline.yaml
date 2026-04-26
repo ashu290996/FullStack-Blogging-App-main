@@ -25,7 +25,7 @@ variables:
   owaspFailOnCVSS: 7
 
 pool:
- name: default
+ vmImage: 'ubuntu-latest'
 stages:
     - stage: Package
       displayName: 'Build code'
@@ -33,6 +33,8 @@ stages:
           - job: mvnbuildcompile
             displayName: 'mvnbuildcompile'
             steps:
+            
+             
              - task: Cache@2
                displayName: 'Cache Maven Dependencies'
                inputs:
@@ -189,7 +191,9 @@ stages:
         - job: Deployonk8
           displayName: 'Deploying into k8'
           steps:
-
+            - task: KubectlInstaller@0
+              inputs:
+                kubectlVersion: 'latest'
             - task: Kubernetes@1
               continueOnError: true
               displayName: 'Creating blog namepsace'
@@ -223,6 +227,9 @@ stages:
       jobs:
         - job: 
           steps:
+           - task: HelmInstaller@1
+             inputs:
+               helmVersionToInstall: 'latest'
           
            - task: CmdLine@2
              displayName: 'Installing helm repo'
